@@ -124,7 +124,7 @@ func main() {
 
 채널(channel)은 **고루틴끼리 정보를 교환하고 실행의 흐름을 동기화하기 위해 사용**한다.
 
-<img src="" width="500">
+<img src="https://user-images.githubusercontent.com/55284181/125278294-821f2c00-e34d-11eb-9cdf-cac776027efe.jpg" width="600">
 
 + **채널 선언**
 ```go

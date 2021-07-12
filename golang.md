@@ -1,4 +1,4 @@
-# Go Web Framework
+# Go Language
 본 문서는 [Go 언어 웹 프로그래밍 철저 입문](https://thebook.io/006806/ch01/) 자료를 공부한 뒤 정리한 내용이다.
 
 

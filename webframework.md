@@ -45,3 +45,5 @@
     func ServeFile(w http.ResponseWriter, r *http.Request, name string)
     ```
 
+#### 마이크로 프레임워크
+마이크로 프레임워크는 웹 개발에 필요한 기능을 최소한만 제공하고, 나머지 기능은 다른 라이브러리나 프레임워크를 확장하여 사용하게 한다.

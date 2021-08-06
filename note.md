@@ -24,7 +24,6 @@ POST는 **리소스를 생성/변경하기 위해 설계**되었기 때문에 GE
 POST는 **서버에게 동일한 요청을 여러 번 전송해도 응답은 항상 다를 수 있다.** 이에 따라 POST는 서버의 상태나 데이터를 변경시킬 때 사용된다. 이처럼 POST는 생성, 수정, 삭제에 사용할 수 있지만, 생성에는 POST, 수정은 PUT 또는 PATCH, 삭제는 DELETE가 더 용도에 맞는 메소드라고 할 수 있다.
 
 - HTTP 메세지의 Body는 길이의 제한 없이 데이터를 전송할 수 있다.
-
 - POST 요청은 크롬 개발자 도구, Fiddler와 같은 툴로 요청 내용을 확인할 수 있기 때문에 민감한 데이터의 경우에는 반드시 암호화해 전송해야 한다.
 
 
@@ -115,9 +114,9 @@ func main() {
 
 #### Clean Architecture
 
-<img src="https://user-images.githubusercontent.com/55284181/128448586-7bbe2aef-6c55-4bc4-89d3-b6abada1ac40.png" width="500" title="clean architecture">
+<img src="https://user-images.githubusercontent.com/55284181/128448586-7bbe2aef-6c55-4bc4-89d3-b6abada1ac40.png" width="600" title="clean architecture">
 
-<img src="https://user-images.githubusercontent.com/55284181/128449644-bcd91adc-4682-4280-90c2-eb6dcfdf9f5d.png" width="500" title="repository">
+<img src="https://user-images.githubusercontent.com/55284181/128449644-bcd91adc-4682-4280-90c2-eb6dcfdf9f5d.png" width="700" title="repository">
 
 - v2
     + Entity(domain) : model
@@ -231,6 +230,20 @@ func (ar *articleRepo) Delete(article *model.Article) error {
         result.RowsAffected // returns inserted records count
         ```
 
+- **Create Record With Selected Fields**
+
+    - Create : record를 만들고 지정된 필드에 값을 할당
+        ```go
+        db.Select("Name", "Age", "CreatedAt").Create(&user)
+        // INSERT INTO `users` (`name`,`age`,`created_at`) VALUES ("jinzhu", 18, "2020-07-04 11:05:21.775")
+        ```
+
+    - Omit : record를 만들고 생략하도록 전달된 필드의 값은 무시
+        ```go
+        db.Omit("Name", "Age", "CreatedAt").Create(&user)
+        // INSERT INTO `users` (`birthday`,`updated_at`) VALUES ("2020-01-01 00:00:00.000", "2020-07-04 11:05:21.775")
+        ```
+
 - **Delete a Record**
 
     - Delete
@@ -339,6 +352,50 @@ func (ar *articleRepo) Delete(article *model.Article) error {
 
 #### 관계형 데이터베이스
 
+- **Eager Loading (Preloading)**
+
+    - Preload
+        ```go
+        type User struct {
+            gorm.Model
+            Username string
+            Orders   []Order
+        }
+
+        type Order struct {
+            gorm.Model
+            UserID uint
+            Price  float64
+        }
+
+        // Preload Orders when find users
+        db.Preload("Orders").Find(&users)
+        // SELECT * FROM users;
+        // SELECT * FROM orders WHERE user_id IN (1,2,3,4);
+
+        db.Preload("Orders").Preload("Profile").Preload("Role").Find(&users)
+        // SELECT * FROM users;
+        // SELECT * FROM orders WHERE user_id IN (1,2,3,4); // has many
+        // SELECT * FROM profiles WHERE user_id IN (1,2,3,4); // has one
+        // SELECT * FROM roles WHERE id IN (4,5,6); // belongs to
+        ```
+
+    - Preload All
+        ```clause.Associations```는 creating/updating 시 ```Preload```와 함께 작동할 수 있으며, 모든 연결을 ```Preload```하는 데 사용할 수 있다.
+        ```go
+        type User struct {
+            gorm.Model
+            Name       string
+            CompanyID  uint
+            Company    Company
+            Role       Role
+            Orders     []Order
+        }
+
+        db.Preload(clause.Associations).Find(&users)
+        ```
+
+
 
 
 ---
@@ -349,5 +406,6 @@ func (ar *articleRepo) Delete(article *model.Article) error {
 
 - [gorm Query](https://gorm.io/docs/query.html)
 - [DATABASE2 MySQL - 생활코딩 유튜브 강의](https://www.youtube.com/watch?v=-w1vJgslUG0&list=PLuHgQVnccGMCgrP_9HL3dAcvdt8qOZxjW&index=21)
+- [Eager Loading & Options in ORM](https://velog.io/@minho/Eager-Loading-Options-in-ORM)
 
 - [Gin을 사용하여 웹앱과 마이크로서비스 만들기](https://earntrust.tistory.com/entry/Gin%EC%9D%84-%EC%82%AC%EC%9A%A9%ED%95%98%EC%97%AC-%EC%9B%B9%EC%95%B1%EA%B3%BC-%EB%A7%88%EC%9D%B4%ED%81%AC%EB%A1%9C%EC%84%9C%EB%B9%84%EC%8A%A4-%EB%A7%8C%EB%93%A4%EA%B8%B0)

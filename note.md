@@ -1,0 +1,353 @@
+## HTTP
+
+HTTP는 **웹상에서 클라이언트와 서버 간에 요청/응답으로 데이터를 주고 받을 수 있는 프로토콜**이다. HTTP 요청에 포함되는 HTTP 메소드는 서버가 요청을 수행하기 위해 해야할 행동을 표시하는 용도로 사용한다. HTTP 메소드로는 대표적으로 GET과 POST가 있다.
+
+#### GET
+GET은 **서버로부터 정보를 조회하기 위해 설계된 메소드**이다.
+
+GET으로 **서버에게 동일한 요청을 여러 번 전송하더라도 동일한 응답이 돌아와야 한다.** 그러므로 주로 조회를 할 때 사용해야 한다. 예를 들어, 브라우저에서 웹페이지를 열어보거나 게시글을 읽는 등 조회를 하는 행위는 GET으로 요청하게 된다.
+
+- 쿼리스트링
+
+    GET은 요청을 전송할 때 필요한 데이터를 Body에 담지 않고, 쿼리스트링을 통해 전송한다. URL의 끝에 ```?```와 함께 이름과 값으로 쌍을 이루는 요청 파라미터를 쿼리스트링이라고 부른다. 만약, 요청 파라미터가 여러 개이면 ```&```로 연결한다.
+
+- 쿼리스트링을 포함한 URL 샘플
+
+    여기서 요청 파라미터명은 name1, name2이고, 각각의 파라미터는 value1, value2라는 값으로 서버에 요청을 보내게 된다.
+    ```http
+    www.example-url.com/resources?name1=value1&name2=value2
+    ```
+
+#### POST
+POST는 **리소스를 생성/변경하기 위해 설계**되었기 때문에 GET과 달리 전송해야될 데이터를 HTTP 메세지의 Body에 담아서 전송한다.
+
+POST는 **서버에게 동일한 요청을 여러 번 전송해도 응답은 항상 다를 수 있다.** 이에 따라 POST는 서버의 상태나 데이터를 변경시킬 때 사용된다. 이처럼 POST는 생성, 수정, 삭제에 사용할 수 있지만, 생성에는 POST, 수정은 PUT 또는 PATCH, 삭제는 DELETE가 더 용도에 맞는 메소드라고 할 수 있다.
+
+- HTTP 메세지의 Body는 길이의 제한 없이 데이터를 전송할 수 있다.
+
+- POST 요청은 크롬 개발자 도구, Fiddler와 같은 툴로 요청 내용을 확인할 수 있기 때문에 민감한 데이터의 경우에는 반드시 암호화해 전송해야 한다.
+
+
+## 용어 정리
+
+#### Web Framework
+- 라우터(router) : 웹 요청이 들어오면 URL 기반으로 특정 핸들러에 전달한다.
+- 미들웨어(middleware) : 핸들러 로직을 수행하기 전에 공통으로 수행할 코드 조각이고 재사용이 가능하다. Go Web Application에서 미들웨어는 HTTP 요청을 처리하는 동안 아무데서나 실행할 수 있는 코드이다. 일반적으로 여러 경로에 적용하려는 공통 기능을 캡슐화하는 데 사용된다. 일반적인 사용은 승인, 검증 등이 있다.
+- 핸들러(handler) : 라우터가 요청한 내용을 분석하여 비즈니스 로직을 실행한다.
+- 렌더러(renderer) : 핸들러 로직 수행 결과를 다양한 형태 (JSON, XML, Html Template 등)로 응답한다.
+
+#### Go template
+- 템플릿(template) : 대부분의 서버사이드 언어들은 정적인 페이지에 스크립팅을 지원하기 위한 언어들을 제공한다. JSP나 PHP 스크립팅 같은 것이 그런 예이다. Go에서는 이와 유사한 스크립팅 언어로 template 패키지를 제공한다.
+
+#### debug mode <-> release mode
+- release mode : 프로그램을 배포하기 위해 컴파일 하는 모드
+- debug mode : 컴파일 시 들어가는 디버깅에 필요한 자질구리한 정보를 뺀 알짜 프로그램만 쏙 뽑아냄
+
+
+## Gin
+
+Gin은 Web Application과 Microservices를 만드는 데 사용되는 고성능 Micro-Framework이다. 실습 코드는 eunnseo/web-tuto-with-gin 에 위치한다.
+
+#### Handler
+
+- render : http 요청의 헤더를 조회하여 json과 html 두가지 형태로 응답하게 하는 함수이다.
+    ```go
+    func render(c *gin.Context, data gin.H, templateName string) {
+        switch c.Request.Header.Get("Accept") {
+        case "application/json":
+            // Respond with JSON
+            c.JSON(http.StatusOK, data["payload"])
+        default:
+            // Respond with HTML
+            c.HTML(http.StatusOK, templateName, data)
+        }
+    }
+    ```
+
+- gin.Context : 하나의 요청을 처리하는 모든 핸들러에서 함수 인자로 사용하는 변수 타입이다.
+    + http 요청을 처리하는 일련의 과정에서 key:value 형태로 값을 저장하고 조회할 수 있다.
+    + Go routine의 생성, 중단등 flow control 의 역할도 수행한다.
+    + "context", "context.Context"는 Golang에서 지원하는 유용한 패키지이다. gin.Context 는 해당 패키지를 활용한 타입이다.
+
+- gin.H : ```Type H map[string]interface{}```와 같다.
+
+- payload : 전송되는 데이터를 의미한다. 바디(body)와 같다.
+
+#### main.go
+
+```go
+func main() {
+    gin.SetMode(gin.ReleaseMode)
+    r := gin.Default()
+    r.LoadHTMLGlob("view/*")
+
+    r.GET("/", handler.ShowIndexPage)
+    article := r.Group("/article")
+    {
+        article.GET("/view/:article_id", handler.GetArticle)
+        article.GET("/create", handler.ShowArticleCreationPage)
+        article.POST("/create", handler.CreateArticle)
+        article.GET("/delete/:article_id", handler.DeleteArticle)
+    }
+
+    r.Run(":8080")
+}
+```
+
+- ```gin.Default()``` : Gin 프레임워크의 라우터 생성
+
+- ```r.LoadHTMLGlob("view/*")``` : "./view/" 경로에 있는 html파일들을 요청 처리에 사용할 수 있도록 로드
+    * ex) render 함수의 c.HTML()
+
+- ```r.GET("/", handler.ShowIndexPage)``` : URL path가 "/" 인 경우 handler.ShowIndexPage 핸들러로 처리하도록 등록
+
+- ```article := r.Group("/article")``` : URL path가 "/article" 으로 시작하는 요청에 대하여 그룹으로 묶어 article이라는 라우터로 관리
+
+- ```article.GET("/view/:article_id", handler.GetArticle)```
+    * Path : /article/view/:article_id
+    * Path example : "/article/view/3", "/article/view/11" 
+    * Path에 ":"를 지정하면 Gin의 라우터가 파라미터로 처리
+    * handler.GetArticle 핸들러 함수에서 해당 파라미터는 정수타입으로 활용하고 있음
+    * Gin에서 요청의 파라미터, 쿼리 데이터는 스트링 타입으로 처리하기 때문에 적절한 변환 필요 
+
+- ```r.Run(":8080")``` : 루프백 주소(localhost)의 8080포트로 소켓을 열고 서버를 실행
+
+
+#### Clean Architecture
+
+<img src="https://user-images.githubusercontent.com/55284181/128448586-7bbe2aef-6c55-4bc4-89d3-b6abada1ac40.png" width="500" title="clean architecture">
+
+<img src="https://user-images.githubusercontent.com/55284181/128449644-bcd91adc-4682-4280-90c2-eb6dcfdf9f5d.png" width="500" title="repository">
+
+- v2
+    + Entity(domain) : model
+        ```go
+        type Article struct {
+            ID        int       `json:"id" gorm:"primary_key"`
+            Title     string    `json:"title" gorm:"type:varchar(64);"`
+            Content   string    `json:"content" gorm:"type:varchar(128)"`
+            CreatedAt time.Time `json:"created_at"`
+        }
+        ```
+    + Repository : model과 usecase 계층 연결. usecase 계층에게 데이터에 접근할 수 있는 인터페이스를 제공한다.
+        ```go
+        type ArticleRepo interface {
+            GetAll() ([]model.Article, error)
+            GetByID(id int) (*model.Article, error)
+            Create(article *model.Article) (*model.Article, error)
+            Delete(article *model.Article) error
+        }
+        ```
+    + Usecase : 어플리케이션 작업에 대한 함수. handler 함수에서 사용한다.
+        ```go
+        type ManageArticleUsecase interface {
+            GetAllArticles() ([]model.Article, error)
+            GetArticleByID(id int) (*model.Article, error)
+            CreateNewArticle(title, content string) (*model.Article, error)
+            DeleteArticleByID(id int) error
+        }
+        ```
+    + Handler
+        ```go
+        func (h *GinHandler) ShowIndexPage(c *gin.Context)
+        func (h *GinHandler) ShowArticleCreationPage(c *gin.Context)
+        func (h *GinHandler) ShowArticle(c *gin.Context)
+        func (h *GinHandler) NewArticle(c *gin.Context)
+        func (h *GinHandler) RemoveArticle(c *gin.Context)
+        ```
+    + 의존성 주입 : main에서 인터페이스로 추상화 되어있는 계층들을 실제 구현한 인스턴스로 연결한다.
+        ```go
+        ar := mysql.NewArticleRepo()
+        mauc := manageArticle.NewManageArticleUsecase(ar)
+        h := rest.NewGinHandler(mauc)
+        ```
+
+## mysql
+
+#### mysql connection
+AutoMigrate를 통하여 mysql 데이터베이스에 Article 테이블 자동으로 생성한다.
+
+> AutoMigrate will create tables, missing foreign keys, constraints, columns and indexes. It will change existing column’s type if its size, precision, nullable changed. It WON’T delete unused columns to protect your data.
+
+```go
+var dbConn *gorm.DB
+
+func Setup() {
+	var err error
+	conn := fmt.Sprintf("%s:%s@/%s?parseTime=true", user, pass, db)
+	dbConn, err = gorm.Open(dbms, conn)
+	if err != nil {
+		panic(err)
+	}
+
+	dbConn.AutoMigrate(
+		&model.Article{},
+	)
+}
+```
+
+#### gorm
+gorm을 통해 직접 SQL Query를 작성하지 않고 DB를 사용한다. 메소드로 쿼리 생성 후 객체 인스턴스에 자동으로 바인딩한다. ```db.Where("--").Find(&article)```
+
+```go
+func NewArticleRepo() *articleRepo {
+    return &articleRepo{
+        db: dbConn,
+    }
+}
+
+func (ar *articleRepo) GetAll() (al []model.Article, err error) {
+    return al, ar.db.Find(&al).Error
+    // SELECT * FROM articles;
+}
+
+func (ar *articleRepo) GetByID(id int) (a *model.Article, err error) {
+    a = new(model.Article)
+    return a, ar.db.Where("id=?", id).First(a).Error
+    // SELECT * FROM articles WHERE id = 'id' ORDER BY id LIMIT 1;
+}
+
+func (ar *articleRepo) Create(article *model.Article) (*model.Article, error) {
+    return article, ar.db.Create(article).Error
+}
+
+func (ar *articleRepo) Delete(article *model.Article) error {
+    return ar.db.Delete(article).Error
+    // DELETE FROM articles WHERE id = 'id';
+}
+```
+
+#### CRUD Interface
+
+- **Create Record**
+
+    - Create
+        ```go
+        user := User{Name: "Jinzhu", Age: 18, Birthday: time.Now()}
+        result := db.Create(&user) // pass pointer of data to Create
+
+        user.ID             // returns inserted data's primary key
+        result.Error        // returns error
+        result.RowsAffected // returns inserted records count
+        ```
+
+- **Delete a Record**
+
+    - Delete
+        ```go
+        // Email's ID is `10`
+        db.Delete(&email)
+        // DELETE from emails where id = 10;
+        ```
+
+#### Query
+
+- **Retrieving a single object**
+
+    - First
+        ```go
+        // Get the first record ordered by primary key
+        db.First(&user)
+        // SELECT * FROM users ORDER BY id LIMIT 1;
+        ```
+
+    - Take
+        ```go
+        // Get one record, no specified order
+        db.Take(&user)
+        // SELECT * FROM users LIMIT 1;
+        ```
+
+    - Last
+        ```go
+        // Get last record, ordered by primary key desc
+        db.Last(&user)
+        // SELECT * FROM users ORDER BY id DESC LIMIT 1;
+        ```
+
+    - check result
+        ```go
+        result := db.First(&user)
+        result.RowsAffected // returns count of records found
+        result.Error        // returns error or nil
+
+        // check error ErrRecordNotFound
+        errors.Is(result.Error, gorm.ErrRecordNotFound)
+        ```
+
+- **Retrieving objects with primary key**
+
+    - First
+        ```go
+        db.First(&user, 10)
+        // SELECT * FROM users WHERE id = 10;
+
+        db.First(&user, "10")
+        // SELECT * FROM users WHERE id = 10;
+        ```
+
+    - Find
+        ```go
+        db.Find(&users, []int{1,2,3})
+        // SELECT * FROM users WHERE id IN (1,2,3);
+        ```
+
+- **Retrieving all objects**
+
+    - Find
+        ```go
+        // Get all records
+        result := db.Find(&users)
+        // SELECT * FROM users;
+
+        result.RowsAffected // returns found records count, equals `len(users)`
+        result.Error        // returns error
+        ```
+
+- **Conditions**
+
+    - String Conditions
+        ```go
+        // Get first matched record
+        db.Where("name = ?", "jinzhu").First(&user)
+        // SELECT * FROM users WHERE name = 'jinzhu' ORDER BY id LIMIT 1;
+
+        // Get all matched records
+        db.Where("name <> ?", "jinzhu").Find(&users)
+        // SELECT * FROM users WHERE name <> 'jinzhu';
+
+        // IN
+        db.Where("name IN ?", []string{"jinzhu", "jinzhu 2"}).Find(&users)
+        // SELECT * FROM users WHERE name IN ('jinzhu','jinzhu 2');
+
+        // LIKE
+        db.Where("name LIKE ?", "%jin%").Find(&users)
+        // SELECT * FROM users WHERE name LIKE '%jin%';
+
+        // AND
+        db.Where("name = ? AND age >= ?", "jinzhu", "22").Find(&users)
+        // SELECT * FROM users WHERE name = 'jinzhu' AND age >= 22;
+
+        // Time
+        db.Where("updated_at > ?", lastWeek).Find(&users)
+        // SELECT * FROM users WHERE updated_at > '2000-01-01 00:00:00';
+
+        // BETWEEN
+        db.Where("created_at BETWEEN ? AND ?", lastWeek, today).Find(&users)
+        // SELECT * FROM users WHERE created_at BETWEEN '2000-01-01 00:00:00' AND '2000-01-08 00:00:00';
+        ```
+
+#### 관계형 데이터베이스
+
+
+
+---
+### reference
+- [GET과 POST의 차이](https://hongsii.github.io/2017/08/02/what-is-the-difference-get-and-post/)
+- [GET과 POST의 비교 및 차이](https://mangkyu.tistory.com/17)
+- [debug <=> release 모드의 차이점과 배포](https://killsia.tistory.com/entry/debug-release-%EB%AA%A8%EB%93%9C%EC%9D%98-%EC%B0%A8%EC%9D%B4%EC%A0%90%EA%B3%BC-%EB%B0%B0%ED%8F%AC)
+
+- [gorm Query](https://gorm.io/docs/query.html)
+- [DATABASE2 MySQL - 생활코딩 유튜브 강의](https://www.youtube.com/watch?v=-w1vJgslUG0&list=PLuHgQVnccGMCgrP_9HL3dAcvdt8qOZxjW&index=21)
+
+- [Gin을 사용하여 웹앱과 마이크로서비스 만들기](https://earntrust.tistory.com/entry/Gin%EC%9D%84-%EC%82%AC%EC%9A%A9%ED%95%98%EC%97%AC-%EC%9B%B9%EC%95%B1%EA%B3%BC-%EB%A7%88%EC%9D%B4%ED%81%AC%EB%A1%9C%EC%84%9C%EB%B9%84%EC%8A%A4-%EB%A7%8C%EB%93%A4%EA%B8%B0)

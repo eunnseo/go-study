@@ -1,4 +1,4 @@
-## HTTP
+## 1. HTTP
 
 HTTP는 **웹상에서 클라이언트와 서버 간에 요청/응답으로 데이터를 주고 받을 수 있는 프로토콜**이다. HTTP 요청에 포함되는 HTTP 메소드는 서버가 요청을 수행하기 위해 해야할 행동을 표시하는 용도로 사용한다. HTTP 메소드로는 대표적으로 GET과 POST가 있다.
 
@@ -27,7 +27,7 @@ POST는 **서버에게 동일한 요청을 여러 번 전송해도 응답은 항
 - POST 요청은 크롬 개발자 도구, Fiddler와 같은 툴로 요청 내용을 확인할 수 있기 때문에 민감한 데이터의 경우에는 반드시 암호화해 전송해야 한다.
 
 
-## 용어 정리
+## 2. 용어 정리
 
 #### Web Framework
 - 라우터(router) : 웹 요청이 들어오면 URL 기반으로 특정 핸들러에 전달한다.
@@ -42,8 +42,39 @@ POST는 **서버에게 동일한 요청을 여러 번 전송해도 응답은 항
 - release mode : 프로그램을 배포하기 위해 컴파일 하는 모드
 - debug mode : 컴파일 시 들어가는 디버깅에 필요한 자질구리한 정보를 뺀 알짜 프로그램만 쏙 뽑아냄
 
+#### Web
+- Internet : 컴퓨터가 서로 연결되어 통신을 주고 받는, 컴퓨터끼리의 네트워크를 일컫는 말
+- Web : 인터넷 상에 정보가 얽혀있는 무형의 정보 네트워크. 인터넷에서 사용되는 서비스 중 하나. client 컴퓨터가 server 컴퓨터에게 정보를 요청하는 관계를 말한다.
+    - Web browser : 클라이언트 컴퓨터에 설치된 프로그램 (= web client)
+    - Web server : 요청에 응답하는 서버 컴퓨터에 설치된 웹을 위한 프로그램
 
-## Gin
+#### MySQL Database
+<img src="https://user-images.githubusercontent.com/55284181/128584205-901982fe-bb0b-4598-ad29-ca25501e4a23.png" width="700" title="database">
+
+- database server(데이터베이스 서버) : 스키마들을 저장하는 곳
+- database(데이터베이스) : 서로 연관된 표들을 grouping할 때 사용하는 일종의 폴더 (= schema)
+- table(표) : 데이터가 실질적으로 저장되는 저장소
+
+<img src="https://user-images.githubusercontent.com/55284181/128589772-0cd921e2-782d-4259-8280-6343c6fff37e.png" width="600" title="mysql table">
+
+- column(열) : 속성 정보를 의미한다. 각각의 열은 유일한 이름을 가지고 있으며, 자신만의 타입을 가진다. (= field, attribute)
+- row(행) : 관계된 데이터의 묶음을 의미한다. (= record, tuple)
+- degree : 열의 수를 의미하며, 0이 될 수 없다.
+- cardinality : 행의 수를 의미하며, 0이 될 수 있다.
+- key
+    - PK(Primary Key) : 테이블에서 행의 식별자로 이용되는 열
+    - FK(Foreign Key) : 한 테이블의 키 중에서 다른 테이블의 PK
+- relationship(관계) : 테이블 간의 관계는 관계를 맺는 테이블의 수에 따라 다음과 같이 나눌 수 있다.
+    <img src="https://user-images.githubusercontent.com/55284181/128589688-a3db9878-a91f-4a91-9184-410d149902f9.png" width="600" title="mysql relationship">
+    1. 일대일(one-to-one) 관계
+    2. 일대다(one-to-many) 관계
+    3. 다대다(many-to-many) 관계
+
+#### Relational Database
+- Model : 어떤 목적을 가지고 진짜를 모방한 것 (추상적 의미)
+
+
+## 3. Gin
 
 Gin은 Web Application과 Microservices를 만드는 데 사용되는 고성능 Micro-Framework이다. 실습 코드는 eunnseo/web-tuto-with-gin 에 위치한다.
 
@@ -161,7 +192,8 @@ func main() {
         h := rest.NewGinHandler(mauc)
         ```
 
-## mysql
+
+## 4. MySQL
 
 #### mysql connection
 AutoMigrate를 통하여 mysql 데이터베이스에 Article 테이블 자동으로 생성한다.
@@ -350,51 +382,119 @@ func (ar *articleRepo) Delete(article *model.Article) error {
         // SELECT * FROM users WHERE created_at BETWEEN '2000-01-01 00:00:00' AND '2000-01-08 00:00:00';
         ```
 
-#### 관계형 데이터베이스
+#### Eager Loading (Preloading)
 
-- **Eager Loading (Preloading)**
+- Preload
+    ```go
+    type User struct {
+        gorm.Model
+        Username string
+        Orders   []Order
+    }
 
-    - Preload
-        ```go
-        type User struct {
-            gorm.Model
-            Username string
-            Orders   []Order
-        }
+    type Order struct {
+        gorm.Model
+        UserID uint
+        Price  float64
+    }
 
-        type Order struct {
-            gorm.Model
-            UserID uint
-            Price  float64
-        }
+    // Preload Orders when find users
+    db.Preload("Orders").Find(&users)
+    // SELECT * FROM users;
+    // SELECT * FROM orders WHERE user_id IN (1,2,3,4);
 
-        // Preload Orders when find users
-        db.Preload("Orders").Find(&users)
-        // SELECT * FROM users;
-        // SELECT * FROM orders WHERE user_id IN (1,2,3,4);
+    db.Preload("Orders").Preload("Profile").Preload("Role").Find(&users)
+    // SELECT * FROM users;
+    // SELECT * FROM orders WHERE user_id IN (1,2,3,4); // has many
+    // SELECT * FROM profiles WHERE user_id IN (1,2,3,4); // has one
+    // SELECT * FROM roles WHERE id IN (4,5,6); // belongs to
+    ```
 
-        db.Preload("Orders").Preload("Profile").Preload("Role").Find(&users)
-        // SELECT * FROM users;
-        // SELECT * FROM orders WHERE user_id IN (1,2,3,4); // has many
-        // SELECT * FROM profiles WHERE user_id IN (1,2,3,4); // has one
-        // SELECT * FROM roles WHERE id IN (4,5,6); // belongs to
-        ```
+- Preload All
+    ```clause.Associations```는 creating/updating 시 ```Preload```와 함께 작동할 수 있으며, 모든 연결을 ```Preload```하는 데 사용할 수 있다.
+    ```go
+    type User struct {
+        gorm.Model
+        Name       string
+        CompanyID  uint
+        Company    Company
+        Role       Role
+        Orders     []Order
+    }
 
-    - Preload All
-        ```clause.Associations```는 creating/updating 시 ```Preload```와 함께 작동할 수 있으며, 모든 연결을 ```Preload```하는 데 사용할 수 있다.
-        ```go
-        type User struct {
-            gorm.Model
-            Name       string
-            CompanyID  uint
-            Company    Company
-            Role       Role
-            Orders     []Order
-        }
+    db.Preload(clause.Associations).Find(&users)
+    ```
 
-        db.Preload(clause.Associations).Find(&users)
-        ```
+## 5. 관계형 데이터베이스
 
+#### 테이블 분리
+테이블을 분리하여 데이터를 관리하면 추후 데이터의 수정 및 유지보수가 편리하다.
+
+- topic table
+    ```sql
+    DESC topic;
+    ```
+    | Field       | Type        | Null | Key | Default | Extra          |
+    |-------------|-------------|------|-----|---------|----------------|
+    | id          | int         | NO   | PRI | NULL    | auto_increment |
+    | title       | varchar(30) | NO   |     | NULL    |                |
+    | description | text        | YES  |     | NULL    |                |
+    | created     | datetime    | NO   |     | NULL    |                |
+    | author_id   | int         | YES  |     | NULL    |                |
+    ```sql
+    SELECT * FROM topic;
+    ```
+    | id | title      | description       | created             | author_id |
+    |---:|:-----------|:------------------|:--------------------|----------:|
+    |  1 | MySQL      | MySQL is...       | 2018-01-01 12:10:11 |         1 |
+    |  2 | Oracle     | Oracle is ...     | 2018-01-03 13:01:10 |         1 |
+    |  3 | SQL Server | SQL Server is ... | 2018-01-20 11:01:10 |         2 |
+    |  4 | PostgreSQL | PostgreSQL is ... | 2018-01-23 01:03:03 |         3 |
+    |  5 | MongoDB    | MongoDB is ...    | 2018-01-30 12:31:03 |         1 |
+
+- author table
+    ```sql
+    DESC author;
+    ```
+    | Field   | Type         | Null | Key | Default | Extra          |
+    |---------|--------------|------|-----|---------|----------------|
+    | id      | int          | NO   | PRI | NULL    | auto_increment |
+    | name    | varchar(20)  | NO   |     | NULL    |                |
+    | profile | varchar(200) | YES  |     | NULL    |                |
+    ```sql
+    SELECT * FROM author;
+    ```
+    | id | name   | profile                   |
+    |---:|:-------|:--------------------------|
+    |  1 | egoing | developer                 |
+    |  2 | duru   | database administrator    |
+    |  3 | taeho  | data scientist, developer |
+
+#### Join
+```sql
+SELECT * FROM topic LEFT JOIN author ON topic.author_id = author.id;
+```
+| id | title      | description       | created             | author_id | id   | name   | profile                   |
+|---:|------------|-------------------|---------------------|----------:|-----:|--------|---------------------------|
+|  1 | MySQL      | MySQL is...       | 2018-01-01 12:10:11 |         1 |    1 | egoing | developer                 |
+|  2 | Oracle     | Oracle is ...     | 2018-01-03 13:01:10 |         1 |    1 | egoing | developer                 |
+|  3 | SQL Server | SQL Server is ... | 2018-01-20 11:01:10 |         2 |    2 | duru   | database administrator    |
+|  4 | PostgreSQL | PostgreSQL is ... | 2018-01-23 01:03:03 |         3 |    3 | taeho  | data scientist, developer |
+|  5 | MongoDB    | MongoDB is ...    | 2018-01-30 12:31:03 |         1 |    1 | egoing | developer                 |
+
+```sql
+SELECT topic.id AS topic_id,title,description,created,name,profile FROM topic LEFT JOIN author ON topic.author_id = author.id;
+```
+| topic_id | title      | description       | created             | name   | profile                   |
+|---------:|------------|-------------------|---------------------|--------|---------------------------|
+|        1 | MySQL      | MySQL is...       | 2018-01-01 12:10:11 | egoing | developer                 |
+|        2 | Oracle     | Oracle is ...     | 2018-01-03 13:01:10 | egoing | developer                 |
+|        3 | SQL Server | SQL Server is ... | 2018-01-20 11:01:10 | duru   | database administrator    |
+|        4 | PostgreSQL | PostgreSQL is ... | 2018-01-23 01:03:03 | taeho  | data scientist, developer |
+|        5 | MongoDB    | MongoDB is ...    | 2018-01-30 12:31:03 | egoing | developer                 |
+
+#### 관계형 데이터 모델링
+업무파악 -> 개념적 데이터 모델링 -> 논리적 데이터 모델링 -> 물리적 데이터 모델링
 
 
 
@@ -403,9 +503,12 @@ func (ar *articleRepo) Delete(article *model.Article) error {
 - [GET과 POST의 차이](https://hongsii.github.io/2017/08/02/what-is-the-difference-get-and-post/)
 - [GET과 POST의 비교 및 차이](https://mangkyu.tistory.com/17)
 - [debug <=> release 모드의 차이점과 배포](https://killsia.tistory.com/entry/debug-release-%EB%AA%A8%EB%93%9C%EC%9D%98-%EC%B0%A8%EC%9D%B4%EC%A0%90%EA%B3%BC-%EB%B0%B0%ED%8F%AC)
+- [웹이란 무엇인가](https://www.betterweb.or.kr/blog/%EC%9B%B9%EA%B3%BC-%EC%9B%B9-%EA%B2%80%EC%83%89-%EC%9B%B9%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/)
+- [관계형 데이터베이스](http://tcpschool.com/mysql/mysql_intro_relationalDB)
 
 - [gorm Query](https://gorm.io/docs/query.html)
 - [DATABASE2 MySQL - 생활코딩 유튜브 강의](https://www.youtube.com/watch?v=-w1vJgslUG0&list=PLuHgQVnccGMCgrP_9HL3dAcvdt8qOZxjW&index=21)
+- [관계형 데이터 모델링 - 생활코딩 유튜브 강의](https://www.youtube.com/playlist?list=PLuHgQVnccGMDF6rHsY9qMuJMd295Yk4sa)
 - [Eager Loading & Options in ORM](https://velog.io/@minho/Eager-Loading-Options-in-ORM)
 
 - [Gin을 사용하여 웹앱과 마이크로서비스 만들기](https://earntrust.tistory.com/entry/Gin%EC%9D%84-%EC%82%AC%EC%9A%A9%ED%95%98%EC%97%AC-%EC%9B%B9%EC%95%B1%EA%B3%BC-%EB%A7%88%EC%9D%B4%ED%81%AC%EB%A1%9C%EC%84%9C%EB%B9%84%EC%8A%A4-%EB%A7%8C%EB%93%A4%EA%B8%B0)

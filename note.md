@@ -1,23 +1,11 @@
 ## 2. 용어 정리
 
-#### Web Framework
-- 라우터(router) : 웹 요청이 들어오면 URL 기반으로 특정 핸들러에 전달한다.
-- 미들웨어(middleware) : 핸들러 로직을 수행하기 전에 공통으로 수행할 코드 조각이고 재사용이 가능하다. Go Web Application에서 미들웨어는 HTTP 요청을 처리하는 동안 아무데서나 실행할 수 있는 코드이다. 일반적으로 여러 경로에 적용하려는 공통 기능을 캡슐화하는 데 사용된다. 일반적인 사용은 승인, 검증 등이 있다.
-- 핸들러(handler) : 라우터가 요청한 내용을 분석하여 비즈니스 로직을 실행한다.
-- 렌더러(renderer) : 핸들러 로직 수행 결과를 다양한 형태 (JSON, XML, Html Template 등)로 응답한다.
-
 #### Go template
 - 템플릿(template) : 대부분의 서버사이드 언어들은 정적인 페이지에 스크립팅을 지원하기 위한 언어들을 제공한다. JSP나 PHP 스크립팅 같은 것이 그런 예이다. Go에서는 이와 유사한 스크립팅 언어로 template 패키지를 제공한다.
 
 #### debug mode <-> release mode
 - release mode : 프로그램을 배포하기 위해 컴파일 하는 모드
 - debug mode : 컴파일 시 들어가는 디버깅에 필요한 자질구리한 정보를 뺀 알짜 프로그램만 쏙 뽑아냄
-
-#### Web
-- Internet : 컴퓨터가 서로 연결되어 통신을 주고 받는, 컴퓨터끼리의 네트워크를 일컫는 말
-- Web : 인터넷 상에 정보가 얽혀있는 무형의 정보 네트워크. 인터넷에서 사용되는 서비스 중 하나. client 컴퓨터가 server 컴퓨터에게 정보를 요청하는 관계를 말한다.
-    - Web browser : 클라이언트 컴퓨터에 설치된 프로그램 (= web client)
-    - Web server : 요청에 응답하는 서버 컴퓨터에 설치된 웹을 위한 프로그램
 
 #### MySQL Database
 <img src="https://user-images.githubusercontent.com/55284181/128584205-901982fe-bb0b-4598-ad29-ca25501e4a23.png" width="700" title="database">
@@ -472,7 +460,6 @@ SELECT topic.id AS topic_id,title,description,created,name,profile FROM topic LE
 ---
 ### reference
 - [debug <=> release 모드의 차이점과 배포](https://killsia.tistory.com/entry/debug-release-%EB%AA%A8%EB%93%9C%EC%9D%98-%EC%B0%A8%EC%9D%B4%EC%A0%90%EA%B3%BC-%EB%B0%B0%ED%8F%AC)
-- [웹이란 무엇인가](https://www.betterweb.or.kr/blog/%EC%9B%B9%EA%B3%BC-%EC%9B%B9-%EA%B2%80%EC%83%89-%EC%9B%B9%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/)
 - [관계형 데이터베이스](http://tcpschool.com/mysql/mysql_intro_relationalDB)
 
 - [gorm Query](https://gorm.io/docs/query.html)

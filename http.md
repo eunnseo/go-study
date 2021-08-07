@@ -18,7 +18,7 @@ HTTP(HyperText Transfer Protocol)는 **웹상에서 클라이언트와 서버 �
 
 ## 1. HTTP 통신 방식
 - 클라이언트가 HTTP request를 서버에 보내면 서버는 HTTP response를 보내는 구조로 되어 있다.
-- HTTP는 Statelass, 즉 state(상태)를 저장하지 않는다. 그래서 만일 여러 요청과응답 의 진행과정이나 데이터가 필요할때는 쿠키나 세션 등등을 사용하게 된다.
+- HTTP는 Stateless, 즉 state(상태)를 저장하지 않는다. 그래서 만일 여러 요청과응답 의 진행과정이나 데이터가 필요할때는 쿠키나 세션 등등을 사용하게 된다.
 
 
 ## 2. HTTP Request 구조
@@ -122,7 +122,7 @@ POST는 **서버에게 동일한 요청을 여러 번 전송해도 응답은 항
 네트워크 상에서 자원이 어디 있는지를 알려주기 위한 규약
 
 #### URL의 구성 요소
-<img src="https://user-images.githubusercontent.com/55284181/111994472-2a20a780-8b5b-11eb-8c9d-d8224abe6e92.png" width="700" title="URL 구성요소">
+<img src="https://user-images.githubusercontent.com/55284181/111994472-2a20a780-8b5b-11eb-8c9d-d8224abe6e92.png" width="600" title="URL 구성요소">
 
 1. 프로토콜
     - 컴퓨터끼리 네트워크 통신을 할 때 규격이다.

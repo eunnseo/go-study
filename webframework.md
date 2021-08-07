@@ -2,14 +2,8 @@
 본 문서는 [Go 언어 웹 프로그래밍 철저 입문](https://thebook.io/006806/ch01/) 자료를 공부한 뒤 정리한 내용이다.
 
 
-## 1. Web
-- Internet : 컴퓨터가 서로 연결되어 통신을 주고 받는, 컴퓨터끼리의 네트워크를 일컫는 말
-- Web : 인터넷 상에 정보가 얽혀있는 무형의 정보 네트워크. 인터넷에서 사용되는 서비스 중 하나. client 컴퓨터가 server 컴퓨터에게 정보를 요청하는 관계를 말한다.
-    - Web browser : 클라이언트 컴퓨터에 설치된 프로그램 (= web client)
-    - Web server : 요청에 응답하는 서버 컴퓨터에 설치된 웹을 위한 프로그램
 
-
-## 2. Web Framework
+## 1. Web Framework
 웹(web)을 만드는 데 있어서 개발을 할 수 있도록 만들어 놓은 틀
 
 #### 웹 요청 처리 과정
@@ -33,7 +27,7 @@
 5. 렌더러 (renderer) : 핸들러 로직 수행 결과를 다양한 형태(JSON, XML, Html Template 등)로 응답한다.
 
 
-## 3. Web Application
+## 2. Web Application
 
 - 웹 서버를 구동하고 웹 요청을 받아 처리하는 함수
     ```go
@@ -63,5 +57,4 @@
 
 ---
 ### reference
-- [웹이란 무엇인가](https://www.betterweb.or.kr/blog/%EC%9B%B9%EA%B3%BC-%EC%9B%B9-%EA%B2%80%EC%83%89-%EC%9B%B9%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/)
 - [Web framework](https://velog.io/@lucasonestar/Web-framework%EC%9B%B9-%ED%94%84%EB%A0%88%EC%9E%84%EC%9B%8C%ED%81%AC)

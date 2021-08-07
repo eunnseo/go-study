@@ -130,12 +130,12 @@
     5. 클라이언트 정보를 가지고 서버 요청을 처리하여 클라이언트에게 응답합니다.
 
 ***
-### 참조링크
-* <https://velog.io/@teddybearjung/HTTP-%EA%B5%AC%EC%A1%B0-%EB%B0%8F-%ED%95%B5%EC%8B%AC-%EC%9A%94%EC%86%8C>
-* <https://ko.wikipedia.org/wiki/%EC%9D%B8%ED%84%B0%EB%84%B7_%ED%94%84%EB%A1%9C%ED%86%A0%EC%BD%9C_%EC%8A%A4%EC%9C%84%ED%8A%B8>
-* <https://underground2.tistory.com/5>
-* <https://reakwon.tistory.com/68>
-* <https://www.grabbing.me/URL-018cdd1bb4b541fab6246569244fcf93>
-* <https://velog.io/@lucasonestar/Web-framework%EC%9B%B9-%ED%94%84%EB%A0%88%EC%9E%84%EC%9B%8C%ED%81%AC>
-* [더북(TheBook): Go 언어 웹 프로그래밍 철저 입문](https://thebook.io/006806/)
-* <https://interconnection.tistory.com/74>
+### reference
+- [HTTP 구조 및 핵심 요소](https://velog.io/@teddybearjung/HTTP-%EA%B5%AC%EC%A1%B0-%EB%B0%8F-%ED%95%B5%EC%8B%AC-%EC%9A%94%EC%86%8C)
+- [TCP와 IP 위키백과](https://ko.wikipedia.org/wiki/%EC%9D%B8%ED%84%B0%EB%84%B7_%ED%94%84%EB%A1%9C%ED%86%A0%EC%BD%9C_%EC%8A%A4%EC%9C%84%ED%8A%B8)
+- [TCP/IP 프로토콜](https://underground2.tistory.com/5)
+- [TCP/IP 계층 기본 개념](https://reakwon.tistory.com/68)
+- [URL 구조 이해하기](https://www.grabbing.me/URL-018cdd1bb4b541fab6246569244fcf93)
+- [Web framework](https://velog.io/@lucasonestar/Web-framework%EC%9B%B9-%ED%94%84%EB%A0%88%EC%9E%84%EC%9B%8C%ED%81%AC)
+- [더북(TheBook): Go 언어 웹 프로그래밍 철저 입문](https://thebook.io/006806/)
+- [쿠키와 세션 개념](https://interconnection.tistory.com/74)

@@ -53,8 +53,24 @@
 마이크로 프레임워크는 웹 개발에 필요한 기능을 최소한만 제공하고, 나머지 기능은 다른 라이브러리나 프레임워크를 확장하여 사용하게 한다.
 
 
+## 3. Cookie and Session
+
+#### HTTP의 특징과 쿠키와 세션을 사용하는 이유
+HTTP 프로토콜이 connectionless, stateless한 특성이 있기 때문에 HTTP 프로토콜 환경에서 서버는 클라이언트가 누구인지 확인해야 한다.
+
+- connectionless : 클라이언트가 요청을 한 후 응답을 받으면 그 연결을 끊어 버리는 특징
+- stateless : 통신이 끝나면 상태를 유지하지 않는 특징
+
+### 3-1. Cookie
+<img src="https://user-images.githubusercontent.com/55284181/128598750-89a70669-061e-4df8-86fb-48d1ad69c38e.png" width="600">
+
+
+### 3-2. Session
+
 
 
 ---
 ### reference
 - [Web framework](https://velog.io/@lucasonestar/Web-framework%EC%9B%B9-%ED%94%84%EB%A0%88%EC%9E%84%EC%9B%8C%ED%81%AC)
+- [쿠키와 세션 개념](https://interconnection.tistory.com/74)
+- [쿠키와 세션의 개념/차이/용도/작동방식](https://devuna.tistory.com/23)

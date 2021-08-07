@@ -1,4 +1,5 @@
-# Server
+# HTTP, 웹 서버 구조
+본 문서는 nclab 커리큘럼 웹서버-실습-2 내용을 공부하고 정리한 문서이다.
 
 ## 1. HTTP 프로토콜
     HyperText Transfer Protocol

@@ -1,32 +1,3 @@
-## 1. HTTP
-
-HTTP는 **웹상에서 클라이언트와 서버 간에 요청/응답으로 데이터를 주고 받을 수 있는 프로토콜**이다. HTTP 요청에 포함되는 HTTP 메소드는 서버가 요청을 수행하기 위해 해야할 행동을 표시하는 용도로 사용한다. HTTP 메소드로는 대표적으로 GET과 POST가 있다.
-
-#### GET
-GET은 **서버로부터 정보를 조회하기 위해 설계된 메소드**이다.
-
-GET으로 **서버에게 동일한 요청을 여러 번 전송하더라도 동일한 응답이 돌아와야 한다.** 그러므로 주로 조회를 할 때 사용해야 한다. 예를 들어, 브라우저에서 웹페이지를 열어보거나 게시글을 읽는 등 조회를 하는 행위는 GET으로 요청하게 된다.
-
-- 쿼리스트링
-
-    GET은 요청을 전송할 때 필요한 데이터를 Body에 담지 않고, 쿼리스트링을 통해 전송한다. URL의 끝에 ```?```와 함께 이름과 값으로 쌍을 이루는 요청 파라미터를 쿼리스트링이라고 부른다. 만약, 요청 파라미터가 여러 개이면 ```&```로 연결한다.
-
-- 쿼리스트링을 포함한 URL 샘플
-
-    여기서 요청 파라미터명은 name1, name2이고, 각각의 파라미터는 value1, value2라는 값으로 서버에 요청을 보내게 된다.
-    ```http
-    www.example-url.com/resources?name1=value1&name2=value2
-    ```
-
-#### POST
-POST는 **리소스를 생성/변경하기 위해 설계**되었기 때문에 GET과 달리 전송해야될 데이터를 HTTP 메세지의 Body에 담아서 전송한다.
-
-POST는 **서버에게 동일한 요청을 여러 번 전송해도 응답은 항상 다를 수 있다.** 이에 따라 POST는 서버의 상태나 데이터를 변경시킬 때 사용된다. 이처럼 POST는 생성, 수정, 삭제에 사용할 수 있지만, 생성에는 POST, 수정은 PUT 또는 PATCH, 삭제는 DELETE가 더 용도에 맞는 메소드라고 할 수 있다.
-
-- HTTP 메세지의 Body는 길이의 제한 없이 데이터를 전송할 수 있다.
-- POST 요청은 크롬 개발자 도구, Fiddler와 같은 툴로 요청 내용을 확인할 수 있기 때문에 민감한 데이터의 경우에는 반드시 암호화해 전송해야 한다.
-
-
 ## 2. 용어 정리
 
 #### Web Framework
@@ -500,8 +471,6 @@ SELECT topic.id AS topic_id,title,description,created,name,profile FROM topic LE
 
 ---
 ### reference
-- [GET과 POST의 차이](https://hongsii.github.io/2017/08/02/what-is-the-difference-get-and-post/)
-- [GET과 POST의 비교 및 차이](https://mangkyu.tistory.com/17)
 - [debug <=> release 모드의 차이점과 배포](https://killsia.tistory.com/entry/debug-release-%EB%AA%A8%EB%93%9C%EC%9D%98-%EC%B0%A8%EC%9D%B4%EC%A0%90%EA%B3%BC-%EB%B0%B0%ED%8F%AC)
 - [웹이란 무엇인가](https://www.betterweb.or.kr/blog/%EC%9B%B9%EA%B3%BC-%EC%9B%B9-%EA%B2%80%EC%83%89-%EC%9B%B9%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/)
 - [관계형 데이터베이스](http://tcpschool.com/mysql/mysql_intro_relationalDB)

@@ -27,7 +27,9 @@
     3. 다대다(many-to-many) 관계
 
 
-## 2. MySQL
+## 2. SQL
+
+### 2-1. MySQL
 
 #### 테이블 분리
 테이블을 분리하여 데이터를 관리하면 추후 데이터의 수정 및 유지보수가 편리하다.
@@ -95,11 +97,22 @@ SELECT topic.id AS topic_id,title,description,created,name,profile FROM topic LE
 |        4 | PostgreSQL | PostgreSQL is ... | 2018-01-23 01:03:03 | taeho  | data scientist, developer |
 |        5 | MongoDB    | MongoDB is ...    | 2018-01-30 12:31:03 | egoing | developer                 |
 
-#### 관계형 데이터베이스
+### 2-2. 관계형 데이터베이스
+
 - Model : 어떤 목적을 가지고 진짜를 모방한 것 (추상적 의미)
 
-#### 관계형 데이터 모델링
-업무파악 -> 개념적 데이터 모델링 -> 논리적 데이터 모델링 -> 물리적 데이터 모델링
+- 관계형 데이터 모델링
+    - 업무파악 -> 개념적 데이터 모델링 -> 논리적 데이터 모델링 -> 물리적 데이터 모델링
+
+### 2-3. Nested Query
+
+중첩 질의(Nested query)는 SQL문 안에 또 다른 SQL문을 포함하고 있는 구조이다.
+
++ 중첩 질의의 수행 순서 : 가장 안쪽 -> 바깥쪽
+
+- 서브쿼리(Subquery)란 SQL 문 안에 포함되어 있는 또 다른 SQL 문을 말한다.
+- 서브쿼리는 메인쿼리가 서브쿼리를 포함하는 종속적인 관계이다.
+- 서브쿼리는 메인쿼리의 컬럼을 모두 사용할 수 있지만, 메인쿼리는 서브쿼리의 칼럼을 사용할 수 없다.
 
 
 ## 3. ORM
@@ -138,7 +151,7 @@ SELECT topic.id AS topic_id,title,description,created,name,profile FROM topic LE
     - 방향성이 있다. (Directional)
     - Java에서 양방향 관계가 필요한 경우 연관을 두 번 정의해야 한다.
 
-- RDBMS의 외래키(Foreign Key)
+- RDBMS(Relational Database Management System)의 외래키(Foreign Key)
     - FK와 테이블 Join은 관계형 데이터베이스 연결을 자연스럽게 만든다.
     - 방향성이 없다. (Direction-Less)
 
@@ -159,133 +172,161 @@ foreach ($books as $book) {
 
 ## 4. gorm
 
-#### CRUD Interface
-- **Create Record**
-    - Create
-        ```go
-        user := User{Name: "Jinzhu", Age: 18, Birthday: time.Now()}
-        result := db.Create(&user) // pass pointer of data to Create
+### 4-1. CRUD Interface
 
-        user.ID             // returns inserted data's primary key
-        result.Error        // returns error
-        result.RowsAffected // returns inserted records count
-        ```
+#### Create Record
+- Create
+    ```go
+    user := User{Name: "Jinzhu", Age: 18, Birthday: time.Now()}
+    result := db.Create(&user) // pass pointer of data to Create
 
-- **Create Record With Selected Fields**
-    - Create : record를 만들고 지정된 필드에 값을 할당
-        ```go
-        db.Select("Name", "Age", "CreatedAt").Create(&user)
-        // INSERT INTO `users` (`name`,`age`,`created_at`) VALUES ("jinzhu", 18, "2020-07-04 11:05:21.775")
-        ```
+    user.ID             // returns inserted data's primary key
+    result.Error        // returns error
+    result.RowsAffected // returns inserted records count
+    ```
 
-    - Omit : record를 만들고 생략하도록 전달된 필드의 값은 무시
-        ```go
-        db.Omit("Name", "Age", "CreatedAt").Create(&user)
-        // INSERT INTO `users` (`birthday`,`updated_at`) VALUES ("2020-01-01 00:00:00.000", "2020-07-04 11:05:21.775")
-        ```
+#### Create Record With Selected Fields
+- Create : record를 만들고 지정된 필드에 값을 할당
+    ```go
+    db.Select("Name", "Age", "CreatedAt").Create(&user)
+    // INSERT INTO `users` (`name`,`age`,`created_at`) VALUES ("jinzhu", 18, "2020-07-04 11:05:21.775")
+    ```
 
-- **Delete a Record**
-    - Delete
-        ```go
-        // Email's ID is `10`
-        db.Delete(&email)
-        // DELETE from emails where id = 10;
-        ```
+- Omit : record를 만들고 생략하도록 전달된 필드의 값은 무시
+    ```go
+    db.Omit("Name", "Age", "CreatedAt").Create(&user)
+    // INSERT INTO `users` (`birthday`,`updated_at`) VALUES ("2020-01-01 00:00:00.000", "2020-07-04 11:05:21.775")
+    ```
 
-#### Query
-- **Retrieving a single object**
-    - First
-        ```go
-        // Get the first record ordered by primary key
-        db.First(&user)
-        // SELECT * FROM users ORDER BY id LIMIT 1;
-        ```
+#### Delete a Record
+- Delete
+    ```go
+    // Email's ID is `10`
+    db.Delete(&email)
+    // DELETE from emails where id = 10;
+    ```
 
-    - Take
-        ```go
-        // Get one record, no specified order
-        db.Take(&user)
-        // SELECT * FROM users LIMIT 1;
-        ```
+### 4-2. Query
 
-    - Last
-        ```go
-        // Get last record, ordered by primary key desc
-        db.Last(&user)
-        // SELECT * FROM users ORDER BY id DESC LIMIT 1;
-        ```
+#### Retrieving a single object
+- First
+    ```go
+    // Get the first record ordered by primary key
+    db.First(&user)
+    // SELECT * FROM users ORDER BY id LIMIT 1;
+    ```
 
-    - check result
-        ```go
-        result := db.First(&user)
-        result.RowsAffected // returns count of records found
-        result.Error        // returns error or nil
+- Take
+    ```go
+    // Get one record, no specified order
+    db.Take(&user)
+    // SELECT * FROM users LIMIT 1;
+    ```
 
-        // check error ErrRecordNotFound
-        errors.Is(result.Error, gorm.ErrRecordNotFound)
-        ```
+- Last
+    ```go
+    // Get last record, ordered by primary key desc
+    db.Last(&user)
+    // SELECT * FROM users ORDER BY id DESC LIMIT 1;
+    ```
 
-- **Retrieving objects with primary key**
-    - First
-        ```go
-        db.First(&user, 10)
-        // SELECT * FROM users WHERE id = 10;
+- check result
+    ```go
+    result := db.First(&user)
+    result.RowsAffected // returns count of records found
+    result.Error        // returns error or nil
 
-        db.First(&user, "10")
-        // SELECT * FROM users WHERE id = 10;
-        ```
+    // check error ErrRecordNotFound
+    errors.Is(result.Error, gorm.ErrRecordNotFound)
+    ```
 
-    - Find
-        ```go
-        db.Find(&users, []int{1,2,3})
-        // SELECT * FROM users WHERE id IN (1,2,3);
-        ```
+#### Retrieving objects with primary key
+- First
+    ```go
+    db.First(&user, 10)
+    // SELECT * FROM users WHERE id = 10;
 
-- **Retrieving all objects**
-    - Find
-        ```go
-        // Get all records
-        result := db.Find(&users)
-        // SELECT * FROM users;
+    db.First(&user, "10")
+    // SELECT * FROM users WHERE id = 10;
+    ```
 
-        result.RowsAffected // returns found records count, equals `len(users)`
-        result.Error        // returns error
-        ```
+- Find
+    ```go
+    db.Find(&users, []int{1,2,3})
+    // SELECT * FROM users WHERE id IN (1,2,3);
+    ```
 
-- **Conditions**
-    - String Conditions
-        ```go
-        // Get first matched record
-        db.Where("name = ?", "jinzhu").First(&user)
-        // SELECT * FROM users WHERE name = 'jinzhu' ORDER BY id LIMIT 1;
+#### Retrieving all objects
+- Find
+    ```go
+    // Get all records
+    result := db.Find(&users)
+    // SELECT * FROM users;
 
-        // Get all matched records
-        db.Where("name <> ?", "jinzhu").Find(&users)
-        // SELECT * FROM users WHERE name <> 'jinzhu';
+    result.RowsAffected // returns found records count, equals `len(users)`
+    result.Error        // returns error
+    ```
 
-        // IN
-        db.Where("name IN ?", []string{"jinzhu", "jinzhu 2"}).Find(&users)
-        // SELECT * FROM users WHERE name IN ('jinzhu','jinzhu 2');
+### 4-3. Conditions (조건)
+- String Conditions
 
-        // LIKE
-        db.Where("name LIKE ?", "%jin%").Find(&users)
-        // SELECT * FROM users WHERE name LIKE '%jin%';
+    ```go
+    // Get first matched record
+    db.Where("name = ?", "jinzhu").First(&user)
+    // SELECT * FROM users WHERE name = 'jinzhu' ORDER BY id LIMIT 1;
 
-        // AND
-        db.Where("name = ? AND age >= ?", "jinzhu", "22").Find(&users)
-        // SELECT * FROM users WHERE name = 'jinzhu' AND age >= 22;
+    // Get all matched records
+    db.Where("name <> ?", "jinzhu").Find(&users)
+    // SELECT * FROM users WHERE name <> 'jinzhu';
 
-        // Time
-        db.Where("updated_at > ?", lastWeek).Find(&users)
-        // SELECT * FROM users WHERE updated_at > '2000-01-01 00:00:00';
+    // IN
+    db.Where("name IN ?", []string{"jinzhu", "jinzhu 2"}).Find(&users)
+    // SELECT * FROM users WHERE name IN ('jinzhu','jinzhu 2');
 
-        // BETWEEN
-        db.Where("created_at BETWEEN ? AND ?", lastWeek, today).Find(&users)
-        // SELECT * FROM users WHERE created_at BETWEEN '2000-01-01 00:00:00' AND '2000-01-08 00:00:00';
-        ```
+    // LIKE
+    db.Where("name LIKE ?", "%jin%").Find(&users)
+    // SELECT * FROM users WHERE name LIKE '%jin%';
 
-#### Eager Loading (Preloading)
+    // AND
+    db.Where("name = ? AND age >= ?", "jinzhu", "22").Find(&users)
+    // SELECT * FROM users WHERE name = 'jinzhu' AND age >= 22;
+
+    // Time
+    db.Where("updated_at > ?", lastWeek).Find(&users)
+    // SELECT * FROM users WHERE updated_at > '2000-01-01 00:00:00';
+
+    // BETWEEN
+    db.Where("created_at BETWEEN ? AND ?", lastWeek, today).Find(&users)
+    // SELECT * FROM users WHERE created_at BETWEEN '2000-01-01 00:00:00' AND '2000-01-08 00:00:00';
+    ```
+
+- Inline Conditions
+    
+    ```Where```과 유사한 방법으로 ```First``` 및 ```Find```와 같은 메서드에서 inline될 수 있다.
+    ```go
+    // Get by primary key if it were a non-integer type
+    db.First(&user, "id = ?", "string_primary_key")
+    // SELECT * FROM users WHERE id = 'string_primary_key';
+
+    // Plain SQL
+    db.Find(&user, "name = ?", "jinzhu")
+    // SELECT * FROM users WHERE name = "jinzhu";
+
+    db.Find(&users, "name <> ? AND age > ?", "jinzhu", 20)
+    // SELECT * FROM users WHERE name <> "jinzhu" AND age > 20;
+
+    // Struct
+    db.Find(&users, User{Age: 20})
+    // SELECT * FROM users WHERE age = 20;
+
+    // Map
+    db.Find(&users, map[string]interface{}{"age": 20})
+    // SELECT * FROM users WHERE age = 20;
+    ```
+
+### 4-4. Eager Loading (Preloading)
 - Preload
+
     ```go
     type User struct {
         gorm.Model
@@ -327,14 +368,40 @@ foreach ($books as $book) {
     db.Preload(clause.Associations).Find(&users)
     ```
 
+- Preload with contditions
+
+    gorm은 Inline Condition과 유사하게 Preload associations을 허용한다.
+    ```go
+    // Preload Orders with conditions
+    db.Preload("Orders", "state NOT IN (?)", "cancelled").Find(&users)
+    // SELECT * FROM users;
+    // SELECT * FROM orders WHERE user_id IN (1,2,3,4) AND state NOT IN ('cancelled');
+
+    db.Where("state = ?", "active").Preload("Orders", "state NOT IN (?)", "cancelled").Find(&users)
+    // SELECT * FROM users WHERE state = 'active';
+    // SELECT * FROM orders WHERE user_id IN (1,2) AND state NOT IN ('cancelled');
+    ```
+
+- Nested Preloading
+
+    ```go
+    db.Preload("Orders.OrderItems.Product").Preload("CreditCard").Find(&users)
+
+    // Customize Preload conditions for `Orders`
+    // And GORM won't preload unmatched order's OrderItems then
+    db.Preload("Orders", "state = ?", "paid").Preload("Orders.OrderItems").Find(&users)
+    ```
+
 
 
 ---
 ### reference
 - [관계형 데이터베이스](http://tcpschool.com/mysql/mysql_intro_relationalDB)
+- [DATABASE2 MySQL - 생활코딩 유튜브 강의](https://www.youtube.com/watch?v=-w1vJgslUG0&list=PLuHgQVnccGMCgrP_9HL3dAcvdt8qOZxjW&index=21)
+- [관계형 데이터 모델링 - 생활코딩 유튜브 강의](https://www.youtube.com/playlist?list=PLuHgQVnccGMDF6rHsY9qMuJMd295Yk4sa)
+- [SQL/MySQL 서브쿼리(SubQuery)](https://snowple.tistory.com/360)
+- [중첩 질의 (Nested query)](https://thinking-jmini.tistory.com/13)
 - [ORM이란](https://gmlwjd9405.github.io/2019/02/01/orm.html)
 - [Eager Loading & Options in ORM](https://velog.io/@minho/Eager-Loading-Options-in-ORM)
 - [Laravel N+1 problem](https://medium.com/sjk5766/laravel-n-1-problem-88e1674e652e)
 - [gorm Query](https://gorm.io/docs/query.html)
-- [DATABASE2 MySQL - 생활코딩 유튜브 강의](https://www.youtube.com/watch?v=-w1vJgslUG0&list=PLuHgQVnccGMCgrP_9HL3dAcvdt8qOZxjW&index=21)
-- [관계형 데이터 모델링 - 생활코딩 유튜브 강의](https://www.youtube.com/playlist?list=PLuHgQVnccGMDF6rHsY9qMuJMd295Yk4sa)

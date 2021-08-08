@@ -6,7 +6,7 @@
 
 ## 1. Gin
 
-Gin은 Web Application과 Microservices를 만드는 데 사용되는 고성능 Micro-Framework이다. 실습 코드는 eunnseo/web-tuto-with-gin 에 위치한다.
+Gin은 Web Application과 Microservices를 만드는 데 사용되는 고성능 Micro-Framework이다.
 
 #### Handler
 

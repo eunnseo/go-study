@@ -333,6 +333,8 @@ foreach ($books as $book) {
 ### reference
 - [관계형 데이터베이스](http://tcpschool.com/mysql/mysql_intro_relationalDB)
 - [ORM이란](https://gmlwjd9405.github.io/2019/02/01/orm.html)
+- [Eager Loading & Options in ORM](https://velog.io/@minho/Eager-Loading-Options-in-ORM)
+- [Laravel N+1 problem](https://medium.com/sjk5766/laravel-n-1-problem-88e1674e652e)
 - [gorm Query](https://gorm.io/docs/query.html)
 - [DATABASE2 MySQL - 생활코딩 유튜브 강의](https://www.youtube.com/watch?v=-w1vJgslUG0&list=PLuHgQVnccGMCgrP_9HL3dAcvdt8qOZxjW&index=21)
 - [관계형 데이터 모델링 - 생활코딩 유튜브 강의](https://www.youtube.com/playlist?list=PLuHgQVnccGMDF6rHsY9qMuJMd295Yk4sa)

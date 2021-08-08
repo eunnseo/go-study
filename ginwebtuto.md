@@ -177,6 +177,13 @@ func (ar *articleRepo) Delete(article *model.Article) error {
 }
 ```
 
+- v3
+    + domain
+        Article 테이블에 writer_id FK를 추가하고, User 테이블을 추가하였다.
+
+        <img src="https://user-images.githubusercontent.com/55284181/128635256-f12b82e5-595b-408c-9939-9ff7719c875f.png" width="300" title="v3 schema">
+
+
 
 
 ---

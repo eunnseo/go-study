@@ -26,6 +26,8 @@
     2. 일대다(one-to-many) 관계
     3. 다대다(many-to-many) 관계
 
+#### 
+
 
 ## 2. MySQL
 
@@ -102,8 +104,60 @@ SELECT topic.id AS topic_id,title,description,created,name,profile FROM topic LE
 업무파악 -> 개념적 데이터 모델링 -> 논리적 데이터 모델링 -> 물리적 데이터 모델링
 
 
+## 3. ORM
 
-## 3. gorm
+#### 영속성 (Persistence)
+데이터를 생성한 프로그램이 종료되더라도 사라지지 않는 데이터의 특성을 말한다.
+
+- Object Persistence(영구적인 객체)
+    메모리 상의 데이터를 파일 시스템, 관계형 테이터베이스 혹은 객체 데이터베이스 등을 활용하여 영구적으로 저장하여 영속성 부여한다.
+
+    <img src="https://user-images.githubusercontent.com/55284181/128617948-1d4899d5-bd49-40a0-9147-7ebb1e59054c.png" width="600" title="orm-persistence">
+
+#### ORM (Object Relational Mapping, 객체-관계 매핑)
+객체와 관계형 데이터베이스의 데이터를 자동으로 매핑(연결)해주는 것을 말한다.
+
+- 특징
+    - 객체 지향 프로그래밍은 **클래스**를 사용하고, 관계형 데이터베이스는 **테이블**을 사용한다.
+    - 객체 모델과 관계형 모델 간에 불일치가 존재한다.
+    - ORM을 통해 객체 간의 관계를 바탕으로 SQL을 자동으로 생성하여 불일치를 해결한다.
+    - **데이터베이스 데이터 <- 매핑 -> Object 필드**
+        - 객체를 통해 간접적으로 데이터베이스 데이터를 다룬다.
+
+- 장점
+    - 객체 지향적인 코드로 인해 더 직관적이고 비즈니스 로직에 더 집중할 수 있게 도와준다
+    - 재사용 및 유지보수의 편리성이 증가한다.
+    - DBMS(Database Management System)에 대한 종속성이 줄어든다.
+
+- 단점
+    - 완벽한 ORM으로만 서비스를 구현하기가 어렵다. 사용하기는 편하지만 설계는 매우 신중히 해야 한다.
+    - 프로시저가 많은 시스템에선 ORM의 객체 지향적인 장점을 활용하기 어렵다.
+
+#### Association (연관성)
+- Java에서의 객체 참조(Object References)
+    - 방향성이 있다. (Directional)
+    - Java에서 양방향 관계가 필요한 경우 연관을 두 번 정의해야 한다.
+
+- RDBMS의 외래키(Foreign Key)
+    - FK와 테이블 Join은 관계형 데이터베이스 연결을 자연스럽게 만든다.
+    - 방향성이 없다. (Direction-Less)
+
+#### Eager Loading
+- Lazy Loading : 연관된 데이터들을 실제로 접근하기 전에는 로딩하지 않는다. ((2)에서 데이터를 가져옴)
+- Eager Loading : SQL로 한 번에 많은 데이터를 가져오고 싶을 때 즉시 로딩하는 것이다. 모델에 쿼리할 때 연관된 데이터를 가져온다. ((1)에서 데이터를 가져옴)
+
+```php
+$books = App\Book::all(); // SELECT * FROM book; (1)
+
+foreach ($books as $book) {
+    echo $book->author->name; // 연관된 author 정보의 name에 접근 (2)
+                                // SELECT name FROM author
+                                // WHERE id = $book["author_id"]
+}
+```
+
+
+## 4. gorm
 
 #### CRUD Interface
 - **Create Record**
@@ -279,7 +333,6 @@ SELECT topic.id AS topic_id,title,description,created,name,profile FROM topic LE
 ### reference
 - [관계형 데이터베이스](http://tcpschool.com/mysql/mysql_intro_relationalDB)
 - [ORM이란](https://gmlwjd9405.github.io/2019/02/01/orm.html)
-- [Eager Loading & Options in ORM](https://velog.io/@minho/Eager-Loading-Options-in-ORM)
 - [gorm Query](https://gorm.io/docs/query.html)
 - [DATABASE2 MySQL - 생활코딩 유튜브 강의](https://www.youtube.com/watch?v=-w1vJgslUG0&list=PLuHgQVnccGMCgrP_9HL3dAcvdt8qOZxjW&index=21)
 - [관계형 데이터 모델링 - 생활코딩 유튜브 강의](https://www.youtube.com/playlist?list=PLuHgQVnccGMDF6rHsY9qMuJMd295Yk4sa)

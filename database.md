@@ -26,8 +26,6 @@
     2. 일대다(one-to-many) 관계
     3. 다대다(many-to-many) 관계
 
-#### 
-
 
 ## 2. MySQL
 
@@ -134,6 +132,8 @@ SELECT topic.id AS topic_id,title,description,created,name,profile FROM topic LE
     - 프로시저가 많은 시스템에선 ORM의 객체 지향적인 장점을 활용하기 어렵다.
 
 #### Association (연관성)
+관계형 데이터베이스의 Join과 같이 관계성을 갖는 데이터 사이의 처리를 위해 사용된다.
+
 - Java에서의 객체 참조(Object References)
     - 방향성이 있다. (Directional)
     - Java에서 양방향 관계가 필요한 경우 연관을 두 번 정의해야 한다.

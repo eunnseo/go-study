@@ -8,6 +8,6 @@
 
 [3. Web Framework](https://github.com/eunnseo/go-study/blob/main/webframework.md)
 
-[4. Database]()
+[4. Database](https://github.com/eunnseo/go-study/blob/main/database.md)
 
-[5. web-tuto-with-gin]()
+[5. web-tuto-with-gin](https://github.com/eunnseo/go-study/blob/main/ginwebtuto.md)

@@ -2,12 +2,12 @@
 
 #### 목차
 
-[1. Go Language](https://github.com/eunnseo/go-study/blob/main/golang.md)
+[1. Go Language](https://github.com/eunnseo/web-study/blob/main/markdown/golang.md)
 
-[2. HTTP](https://github.com/eunnseo/go-study/blob/main/http.md)
+[2. HTTP](https://github.com/eunnseo/web-study/blob/main/markdown/http.md)
 
-[3. Web Framework](https://github.com/eunnseo/go-study/blob/main/webframework.md)
+[3. Web Framework](https://github.com/eunnseo/web-study/blob/main/markdown/webframework.md)
 
-[4. Database](https://github.com/eunnseo/go-study/blob/main/database.md)
+[4. Database](https://github.com/eunnseo/web-study/blob/main/markdown/database.md)
 
-[5. web-tuto-with-gin](https://github.com/eunnseo/go-study/blob/main/ginwebtuto.md)
+[5. web-tuto-with-gin](https://github.com/eunnseo/web-study/blob/main/markdown/ginwebtuto.md)

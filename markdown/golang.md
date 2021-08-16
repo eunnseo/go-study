@@ -180,3 +180,49 @@ close(ch)
 #### select
 
 select 문은 하나의 고루틴이 여러 채널과 통신할 때 사용한다. case로 여러 채널을 대기시키고 있다가 실행 가능 상태가 된 채널이 있으면 해당 케이스를 수행한다.
+
+
+
+## 3. encoding/json 패키지
+
+#### Marshaling
+논리적 구조를 로우 바이트로 변경하는 것을 '마샬링(Marshaling)' 혹은 '인코딩(Encoding)'이라 표현한다. 정수형이나 구조체 같은 Go value를 바이트 슬라이스로 변경하는 것이다.
+
+```go
+func Marshal(v interface{}) ([]byte, error)
+```
+
+- 예제 코드
+    ```go
+    type User struct {
+        Name string `json:"name"`
+        Age  int    `json:"age"`
+    }
+
+    var u = User {"Gopher", 7}
+    b, _ := json.Marshal(u)
+    fmt.Println(b)          // [123 34 78 97 109 101 34 58 34 ...]
+    fmt.Println(string(b))  // {"Name":"Gopher","Age":7}
+    ```
+
+#### Unmarshaling
+반대로 바이트 슬라이스나 문자열을 논리적 자료 구조로 변경하는 것을 언마샬링(Unmashaling)이라고 한다.
+
+```go
+func Unmarshal(data []byte, v interface{}) error
+```
+
+- 예제 코드
+    ```go
+    var s = `{"name":"gopher","age":7}`
+    var u User
+    json.Unmarshal([]byte(s), &u)
+    fmt.Printf("%+v\n", u)  // {Name:gopher Age:7}
+    ```
+
+
+
+
+---
+##### reference
+- [Go encoding/json 패키지](https://jeonghwan-kim.github.io/dev/2019/01/18/go-encoding-json.html)
